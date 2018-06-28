@@ -1,9 +1,10 @@
-module Causal where
+module LTL.Causal where
 
-open import Core
-open import Stateless
-open import Globally
-open import CatHetSt
+open import Agda.Primitive
+open import LTL.Core public
+open import LTL.Stateless
+open import LTL.Globally
+open import LTL.CatHetSt
 
 infixr 2 _⊵_
 infixr 3 _$ᶜ_
@@ -40,9 +41,9 @@ _$ᶜʷ_ : ∀{ℓ m} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} → [ (A ⊵ B) ] → 
 _$ᶜʳ_ : ∀{ℓ m} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} → ∀{s u} → (A ⊵ B) s → (A [ s ,, u ⟩) → (B [ s ,, u ⟩)
 (f $ᶜʳ σ) t s≤t t<u = f t s≤t (σ beforeʳ t<u)
 
-_·ᶜ_ : ∀{ℓ m n} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} {C : (Set n) ʷ} → ∀{s} → ((A ⊵ B) ⇒ (B ⊵ C) ⇒ (A ⊵ C)) s
-(f ·ᶜ g ) t s≤t σ = g t s≤t (f $ᶜ σ) 
+_·ᶜ_ : ∀{ℓ m n} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} {C : (Set n) ʷ} → ∀{s} → ((B ⊵ C) ⇒ (A ⊵ B) ⇒ (A ⊵ C)) s
+(g ·ᶜ f ) t s≤t σ = g t s≤t (f $ᶜ σ) 
 
 -- weaker version of the previous one.
-_·ᶜʷ_ : ∀{ℓ m n} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} {C : (Set n) ʷ} → [ A ⊵ B ] → [ B ⊵ C ] → [ A ⊵ C ]
-(f ·ᶜʷ g ) s t s≤t σ = g s t s≤t (f $ᶜʷ σ)
+_·ᶜʷ_ : ∀{ℓ m n} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} {C : (Set n) ʷ} → [ B ⊵ C ] → [ A ⊵ B ] → [ A ⊵ C ]
+(g ·ᶜʷ f ) s t s≤t σ = g s t s≤t (f $ᶜʷ σ)

@@ -1,2 +1,3 @@
 name : LTL
+depend : agda-prelude
 include : src

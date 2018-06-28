@@ -1,12 +1,14 @@
-module Product where
+module LTL.Product where
 
-open import Core public
+open import LTL.Core public
+open import Agda.Primitive
 open import Prelude.Product
-open import Stateless
-open import Causal
-open import Globally
-open import CatHetSt
-open import PolConsts
+open import LTL.Stateless
+open import LTL.Causal
+open import LTL.Decoupled
+open import LTL.Globally
+open import LTL.CatHetSt
+open import LTL.PolConsts
 
 open import Prelude.Empty
 
@@ -57,6 +59,7 @@ uv2-proof fs gs = refl
 
 
 
+
 -- Product Structure of Streams with Causal morphisms
 
 fstsᶜ : ∀{ℓ m} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} → [ (A ∧ B) ⊵ A ]
@@ -67,6 +70,10 @@ sndsᶜ {_} {_} {A} {B} = arr $ʷ (pureᶠ snds)
 
 bothsᶜ : ∀{ℓ m n} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} {C : (Set n) ʷ} → [ (A ⊵ B) ⇒ (A ⊵ C) ⇒ (A ⊵ (B ∧ C)) ]
 bothsᶜ s f g t s≤t σ = (f t s≤t σ) , (g t s≤t σ)
+
+
+
+
 
 
 

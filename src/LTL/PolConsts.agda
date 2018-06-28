@@ -1,6 +1,7 @@
-module PolConsts where
+module LTL.PolConsts where
 
-open import Stateless public
+open import LTL.Stateless
+open import LTL.Core public
 
 -- Polymorphic Constants
 

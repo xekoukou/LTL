@@ -1,8 +1,9 @@
-module CatHetSt where
+module LTL.CatHetSt where
 
 
-open import PolConsts public
-open import Stateless public
+open import LTL.PolConsts
+open import LTL.Core public
+open import LTL.Stateless
 open import Prelude.Function using (_∘′_ ; id)
 
 

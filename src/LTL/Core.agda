@@ -1,9 +1,9 @@
-module Core where
+module LTL.Core where
 
-open import Agda.Primitive public
+open import Agda.Primitive
 open import Prelude.Nat public
-open import Prelude.Semiring public
-open import Prelude.Nat.Properties public
+open import Prelude.Semiring
+open import Prelude.Nat.Properties
 open import Prelude.Ord public
 open import Prelude.Unit
 open import Prelude.Function using (_∘′_ ; id)
@@ -94,3 +94,23 @@ _∉_ {α} {β} x A = (A x) → ⊥′ {β}
 
 ∃ : ∀ {a b} {A : Set a} → (A → Set b) → Set (a ⊔ b)
 ∃ = Σ _
+
+
+-- Well ordering of < on an interval
+
+_≮[_]_ : Nat → Nat → Nat → Set
+s ≮[ zero  ] u = ⊥
+s ≮[ suc n ] u = ∀ {t} → (s ≤ t) → (t < u) → (s ≮[ n ] t)
+
+
+<-wo′ : ∀ n {s u} → (s ≤ u) → (u ≤ s + n) → (s ≮[ suc n ] u)
+<-wo′ zero s≤u u≤s+n s≤t t<u with w where
+  w = leq-antisym {{OrdNatLaws}} s≤u (transport (λ z → _ < suc z) (add-zero-r _) u≤s+n)
+<-wo′ zero s≤u u≤s+n s≤t t<u | refl = ⊥-elim (leq-less-antisym {{OrdNatLaws}} s≤t t<u)
+<-wo′ (suc n) {s} s≤u u≤s+n {t} s≤t t<u = <-wo′ n s≤t (transport (λ z → t < z) (add-suc-r s n) w) where
+  w = inv-suc-monotone (leq-trans {{OrdNatLaws}} (suc-monotone t<u) u≤s+n)
+
+
+<-wo : ∀ {s u} → (s ≤ u) → ∃ λ n → (s ≮[ n ] u)
+<-wo (diff k eq) = suc k , <-wo′ k (diff k eq) (diff zero (sym (trans eq (cong suc (add-commute k _)))))
+

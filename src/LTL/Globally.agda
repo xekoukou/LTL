@@ -1,6 +1,7 @@
-module Globally where
+module LTL.Globally where
 
-open import Stateless
+open import LTL.Core public
+open import LTL.Stateless
 
 
 

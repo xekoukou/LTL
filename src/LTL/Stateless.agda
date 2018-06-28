@@ -1,7 +1,8 @@
-module Stateless where
+module LTL.Stateless where
 
-open import Core public
-
+open import Prelude.Nat
+open import LTL.Core public
+open import Agda.Primitive
 
 infixr 20 _⇒_
 
