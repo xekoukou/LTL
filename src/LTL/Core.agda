@@ -56,9 +56,9 @@ lemma2 = refl
 lemma3 : ∀ {α} {Aₛ : (Set α) ʷ} → ○ₛ Aₛ ≡ ○ Aₛ
 lemma3 = refl
 
-_∷_ : ∀ {α} {Aₛ : (Set α) ʷ} → ! Aₛ → [ ○ Aₛ ] → [ Aₛ ]
-(x ∷ xs) 0 = x
-(x ∷ xs) (suc n) = xs n
+_∷ₛ_ : ∀ {α} {Aₛ : (Set α) ʷ} → ! Aₛ → [ ○ Aₛ ] → [ Aₛ ]
+(x ∷ₛ xs) 0 = x
+(x ∷ₛ xs) (suc n) = xs n
 
 
 

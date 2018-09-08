@@ -70,3 +70,31 @@ sndsᶜ {_} {_} {A} {B} = arr $ʷ (pureᶠ snds)
 
 bothsᶜ : ∀{ℓ m n} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} {C : (Set n) ʷ} → [ (A ⊵ B) ⇒ (A ⊵ C) ⇒ (A ⊵ (B ∧ C)) ]
 bothsᶜ s f g t s≤t σ = (f t s≤t σ) , (g t s≤t σ)
+
+
+
+
+-- Dependent Functions
+
+_⇒ₚ_ : ∀ {α β γ δ} → {Aₛ : (Set α) ʷ} → {Bₛ : (Set β) ʷ} → (Cₛ : [ Aₛ ⇒ ⟨ Set γ ⟩ ]) → (Dₛ : [ Bₛ ⇒ ⟨ Set δ ⟩ ])
+        → [ (Aₛ ⇒ Bₛ) ⇒ ⟨ Set (α ⊔ γ ⊔ δ) ⟩ ]
+_⇒ₚ_ {Aₛ = Aₛ} {Bₛ} Cₛ Dₛ n f = {a : Aₛ n} → Cₛ _ a → Dₛ _ (f a)
+
+map∧ᵈ : ∀ {α β γ δ} → {Aₛ : (Set α) ʷ} → {Bₛ : (Set β) ʷ} → {Cₛ : [ Aₛ ⇒ ⟨ Set γ ⟩ ]} → {Dₛ : [ Bₛ ⇒ ⟨ Set δ ⟩ ] }
+        → [ ((Aₛ ⇒ Bₛ) ∧ᵈ (Cₛ ⇒ₚ Dₛ)) ⇒ (Aₛ ∧ᵈ Cₛ) ⇒ (Bₛ ∧ᵈ Dₛ) ]
+map∧ᵈ n (f , g) = f *** g
+
+
+_∧↑ᵈ_ : ∀ {α β γ} → {Cₛ : (Set γ) ʷ } → (Aₛ : (Set α) ʷ ) → (Bₛ : [ Cₛ ⇒ Aₛ ⇒ ⟨ Set β ⟩ ] ) → [ Cₛ ⇒ ⟨ Set (α ⊔ β) ⟩ ]
+_∧↑ᵈ_ xs ys n c = Σ (xs n) (ys n c)
+
+
+fstsᵈ : ∀ {α β} → {Aₛ : (Set α) ʷ} → {Bₛ : [ Aₛ ⇒ ⟨ Set β ⟩ ] } → [ Aₛ ∧ᵈ Bₛ ⇒ Aₛ ]
+fstsᵈ n (x , y) = x
+
+sndsᵈ : ∀ {α β} → {Aₛ : (Set α) ʷ} → {Bₛ : [ Aₛ ⇒ ⟨ Set β ⟩ ] } → ∀ n → (p : (Aₛ ∧ᵈ Bₛ) n) → Bₛ n (fst p)
+sndsᵈ n (x , y) = y
+
+
+sndsᵈʷ : ∀ {α β} → {Aₛ : (Set α) ʷ} → {Bₛ : [ Aₛ ⇒ ⟨ Set β ⟩ ] } → (p : [ Aₛ ∧ᵈ Bₛ ] ) → [ Bₛ $ʷ (fstsᵈ $ʷ p) ]
+sndsᵈʷ p n = snd (p n)
