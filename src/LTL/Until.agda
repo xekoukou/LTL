@@ -2,7 +2,7 @@ module LTL.Until where
 
 open import LTL.Core public
 open import Agda.Primitive
-open import Prelude.Product
+open import Data.Product
 
 infixr 2 _U_
 

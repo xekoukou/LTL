@@ -1,7 +1,7 @@
 module LTL.Since where
 
 open import LTL.Core public
-open import Prelude.Product
+open import Data.Product
 
 
 

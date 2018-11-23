@@ -1,4 +1,4 @@
-module Everything where
+module LTLEverything where
 
 open import LTL.CatHetSt
 open import LTL.Causal

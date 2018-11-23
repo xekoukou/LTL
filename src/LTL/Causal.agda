@@ -8,7 +8,6 @@ open import LTL.CatHetSt
 
 infixr 2 _⊵_
 infixr 3 _$ᶜ_
-infixr 3 _$ᶜʷ_
 
 
 -- A ⊵ B is the causal function space from A to B
@@ -19,31 +18,33 @@ _⊵_ : ∀{ℓ m} → (Set ℓ) ʷ → (Set m) ʷ → (Set (ℓ ⊔ m)) ʷ
 -- Categorical structure
 
 arr : ∀{ℓ m} {Aₛ : (Set ℓ) ʷ} {Bₛ : (Set m) ʷ} → [ □ᶠ (Aₛ ⇒ Bₛ) ⇒ (Aₛ ⊵ Bₛ) ]
-arr s f u s≤t σ = f _ s≤t (σ _ s≤t (diff! zero)) 
+arr s f u s≤t σ = f _ s≤t (σ _ s≤t ≤-refl)
 
 identity : ∀{ℓ} {Aₛ : (Set ℓ) ʷ} → [ Aₛ ⊵ Aₛ ]
-identity {_} {Aₛ} = arr $ʷ pureᶠ ids
+identity {_} {Aₛ} = arr $ pureᶠ ids
 
 _before_ : ∀{ℓ} {A : (Set ℓ) ʷ} → ∀{s u v} → (A [ s ,, v ]) → (u ≤ v) → (A [ s ,, u ])
-(σ before u≤v) t s≤t t≤u = σ t s≤t (leq-trans {{OrdNatLaws}} t≤u u≤v)
+(σ before u≤v) t s≤t t≤u = σ t s≤t (≤-trans t≤u u≤v)
 
 _after_ : ∀{ℓ} {A : (Set ℓ) ʷ} → ∀{s t v} → (A [ s ,, v ]) → (s ≤ t) → (A [ t ,, v ])
-(σ after s≤t) t t≤u u≤v = σ t (leq-trans {{OrdNatLaws}} s≤t t≤u) u≤v
-
-_$ᶜ_ : ∀{ℓ m} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} → ∀{s u} → (A ⊵ B) s → A [ s ,, u ] → B [ s ,, u ]
-(f $ᶜ σ) t s≤t t≤u = f t s≤t (σ before t≤u) 
-
--- Weaker version of the previous one.
-_$ᶜʷ_ : ∀{ℓ m} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} → [ (A ⊵ B) ] → ∀{s u} → A [ s ,, u ] → B [ s ,, u ]
-(f $ᶜʷ σ) t s≤t t≤u = f _ t s≤t (σ before t≤u)
+(σ after s≤t) t t≤u u≤v = σ t (≤-trans s≤t t≤u) u≤v
 
 
-_$ᶜʳ_ : ∀{ℓ m} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} → ∀{s u} → (A ⊵ B) s → (A [ s ,, u ⟩) → (B [ s ,, u ⟩)
-(f $ᶜʳ σ) t s≤t t<u = f t s≤t (σ beforeʳ t<u)
+_$ᶜ_ : ∀{ℓ m} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} → [ (A ⊵ B) ] → ∀{s u} → A [ s ,, u ] → B [ s ,, u ]
+(f $ᶜ σ) t s≤t t≤u = f _ t s≤t (σ before t≤u)
 
-_·ᶜ_ : ∀{ℓ m n} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} {C : (Set n) ʷ} → ∀{s} → ((B ⊵ C) ⇒ (A ⊵ B) ⇒ (A ⊵ C)) s
-(g ·ᶜ f ) t s≤t σ = g t s≤t (f $ᶜ σ) 
 
--- weaker version of the previous one.
-_·ᶜʷ_ : ∀{ℓ m n} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} {C : (Set n) ʷ} → [ B ⊵ C ] → [ A ⊵ B ] → [ A ⊵ C ]
-(g ·ᶜʷ f ) s t s≤t σ = g s t s≤t (f $ᶜʷ σ)
+_$ᶜʳ_ : ∀{ℓ m} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} → [ (A ⊵ B) ] → ∀{s u} → (A [ s ,, u ⟩) → (B [ s ,, u ⟩)
+(f $ᶜʳ σ) t s≤t t<u = f _ t s≤t (σ beforeʳ t<u)
+
+
+_·ᶜ_ : ∀{ℓ m n} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} {C : (Set n) ʷ} → [ B ⊵ C ] → [ A ⊵ B ] → [ A ⊵ C ]
+(g ·ᶜ f ) s t s≤t σ = g s t s≤t (f $ᶜ σ)
+
+
+-- Not useful
+-- _$ᶜ_ : ∀{ℓ m} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} → ∀{s u} → (A ⊵ B) s → A [ s ,, u ] → B [ s ,, u ]
+-- (f $ᶜ σ) t s≤t t≤u = f t s≤t (σ before t≤u) 
+
+-- _·ᶜ_ : ∀{ℓ m n} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} {C : (Set n) ʷ} → ∀{s} → ((B ⊵ C) ⇒ (A ⊵ B) ⇒ (A ⊵ C)) s
+-- (g ·ᶜ f ) t s≤t σ = g t s≤t (f $ᶜ σ) 

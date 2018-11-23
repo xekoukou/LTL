@@ -16,10 +16,11 @@ extend : ∀{ℓ m} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} → [ A ⇒ B ] → [ �
 extend f s a u s≤t = f u (a u s≤t)  
 
 extract : ∀{ℓ} {A : (Set ℓ) ʷ} → [ □ᶠ A ⇒ A ]
-extract n a = a n (diff! zero)
+extract n a = a n ≤-refl
 
 duplicate : ∀{ℓ} {A : (Set ℓ) ʷ} → [ □ᶠ A ⇒ □ᶠ (□ᶠ A) ]
-duplicate s a t s≤t u t≤u = a u (leq-trans {{OrdNatLaws}} s≤t t≤u)
+duplicate s a t s≤t u t≤u = a u (≤-trans s≤t t≤u)
+
 
 -- Applicative structure of □
 
@@ -27,9 +28,9 @@ pureᶠ : ∀{ℓ} {A : (Set ℓ) ʷ} → [ A ] → [ □ᶠ A ]
 pureᶠ a s t s≤t = a t
 
 
-_⟨*⟩ᶠʷ_ : ∀{ℓ m} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} → [ □ᶠ (A ⇒ B) ] → [ □ᶠ A ] → [ □ᶠ B ]
-(f ⟨*⟩ᶠʷ a) s t s≤t = f s t s≤t (a s t s≤t)
+_⟨*⟩ᶠ_ : ∀{ℓ m} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} → [ □ᶠ (A ⇒ B) ] → [ □ᶠ A ] → [ □ᶠ B ]
+(f ⟨*⟩ᶠ a) s t s≤t = f s t s≤t (a s t s≤t)
 
--- Pointwise stronger version
-_⟨*⟩ᶠ_ : ∀{ℓ m} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} → ∀{s} → ( □ᶠ (A ⇒ B) ⇒ □ᶠ A ⇒  □ᶠ B ) s
-(f ⟨*⟩ᶠ a) t s≤t = f t s≤t (a t s≤t)
+-- Not useful
+-- _⟨*⟩ᶠ_ : ∀{ℓ m} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} → ∀{s} → ( □ᶠ (A ⇒ B) ⇒ □ᶠ A ⇒  □ᶠ B ) s
+-- (f ⟨*⟩ᶠ a) t s≤t = f t s≤t (a t s≤t)
