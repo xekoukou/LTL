@@ -19,6 +19,11 @@ return◇ₚ s a = s , ≤-refl , a
 join◇ₚ : ∀{α} → {Aₛ : (Set α) ʷ} → [ ◇ₚ (◇ₚ Aₛ ) ⇒ ◇ₚ Aₛ ]
 join◇ₚ s (m , m≤s , t , t≤m , a) = t , ≤-trans t≤m m≤s , a
 
--- Implement this
--- _>>=◇ₚ_ = 
+_>>=◇ₚ_ : ∀{α} → {Aₛ Bₛ : (Set α) ʷ} → [ ◇ₚ Aₛ ] → [ Aₛ ⇒ ◇ₚ Bₛ ] → [ ◇ₚ Bₛ ]
+(ma >>=◇ₚ f) t
+  = let (s , s≤t , a) = ma t
+        (u , u≤s , b) = f s a
+    in u , (≤-trans u≤s s≤t) , b
+
+
 -- For the monadic laws , check the archive.

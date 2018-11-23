@@ -10,16 +10,22 @@ open import LTL.Stateless
 □ᶠ : ∀{ℓ} → (Set ℓ) ʷ → (Set ℓ) ʷ
 □ᶠ A t = ∀ u → (t ≤ u) → A u
 
+
+map□ᶠ : ∀{α β} → {Aₛ : (Set α) ʷ} → {Bₛ : (Set β) ʷ} → [ Aₛ ⇒ Bₛ ] → [ □ᶠ Aₛ ⇒ □ᶠ Bₛ ]
+map□ᶠ f s a u s≤u = f u (a u s≤u)
+
+
+
 -- Comonad structure of □
 
-extend : ∀{ℓ m} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} → [ A ⇒ B ] → [ □ᶠ A ⇒ □ᶠ B ]
-extend f s a u s≤t = f u (a u s≤t)  
+extend□ᶠ : ∀{ℓ m} {A : (Set ℓ) ʷ} {B : (Set m) ʷ} → [ A ⇒ B ] → [ □ᶠ A ⇒ □ᶠ B ]
+extend□ᶠ f s a u s≤t = f u (a u s≤t)  
 
-extract : ∀{ℓ} {A : (Set ℓ) ʷ} → [ □ᶠ A ⇒ A ]
-extract n a = a n ≤-refl
+extract□ᶠ : ∀{ℓ} {A : (Set ℓ) ʷ} → [ □ᶠ A ⇒ A ]
+extract□ᶠ n a = a n ≤-refl
 
-duplicate : ∀{ℓ} {A : (Set ℓ) ʷ} → [ □ᶠ A ⇒ □ᶠ (□ᶠ A) ]
-duplicate s a t s≤t u t≤u = a u (≤-trans s≤t t≤u)
+duplicate□ᶠ : ∀{ℓ} {A : (Set ℓ) ʷ} → [ □ᶠ A ⇒ □ᶠ (□ᶠ A) ]
+duplicate□ᶠ s a t s≤t u t≤u = a u (≤-trans s≤t t≤u)
 
 
 -- Applicative structure of □

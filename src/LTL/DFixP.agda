@@ -8,7 +8,6 @@ open import LTL.Causal
 open import Data.Product
 open import LTL.Globally
 
--- TODO Fix this
 -- -- Fixed points
 
 -- -- The following type-checks, but fails to pass the termination

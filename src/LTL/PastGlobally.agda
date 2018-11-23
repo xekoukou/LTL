@@ -10,7 +10,7 @@ open import Data.Product
 
 
 map□ₚ : ∀{α β} → {Aₛ : (Set α) ʷ} → {Bₛ : (Set β) ʷ} → [ Aₛ ⇒ Bₛ ] → [ □ₚ Aₛ ⇒ □ₚ Bₛ ]
-map□ₚ f s a u s≤u = f u (a u s≤u)
+map□ₚ f s a u u≤s = f u (a u u≤s)
 
 
 -- Applicative Structure of □ₚ

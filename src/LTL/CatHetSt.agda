@@ -8,6 +8,7 @@ open import Function using (_∘′_ ; id)
 
 
 
+
 -- Categorical Structure of Heterogeneous Streams
 -- Objects are in (Set α) ʷ , morphisms in [ Aₛ ⇒ Bₛ ]
 
