@@ -1,6 +1,6 @@
 module LTL.DFixP where
 
-open import LTL.Core public
+open import LTL.Core
 open import LTL.Decoupled
 open import LTL.Stateless
 open import LTL.Product

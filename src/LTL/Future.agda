@@ -1,8 +1,12 @@
 module LTL.Future where
 
-open import LTL.Core public
-open import LTL.Stateless
+
 open import Data.Product
+open import Data.Nat 
+open import Data.Nat.Properties
+
+open import LTL.Core
+open import LTL.Stateless
 
 ◇ᶠ : ∀{ℓ} → (Set ℓ) ʷ → (Set ℓ) ʷ
 ◇ᶠ A t = ∃ λ u → (t ≤ u) × A u

@@ -1,8 +1,12 @@
 module LTL.Until where
 
-open import LTL.Core public
 open import Agda.Primitive
 open import Data.Product
+open import Data.Nat hiding (_⊔_)
+open import Data.Nat.Properties
+
+
+open import LTL.Core
 
 infixr 2 _U_
 

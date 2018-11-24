@@ -1,7 +1,10 @@
 module LTL.Since where
 
-open import LTL.Core public
+
 open import Data.Product
+open import Data.Nat 
+
+open import LTL.Core
 
 
 

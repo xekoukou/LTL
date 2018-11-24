@@ -1,11 +1,11 @@
 module LTL.Core where
 
 open import Agda.Primitive
-open import Data.Nat public hiding (_⊔_)
-open import Data.Empty public
-open import Data.Nat.Properties public
-open import Data.Product public
-open import Relation.Binary.PropositionalEquality hiding ([_]) public
+open import Data.Nat 
+open import Data.Empty
+open import Data.Nat.Properties
+open import Data.Product
+open import Relation.Binary.PropositionalEquality hiding ([_])
 
 -- Homogeneous FRP
 

@@ -1,10 +1,14 @@
 module LTL.Sum where
 
-open import LTL.Core public
+
+open import Agda.Primitive
+open import Relation.Binary.PropositionalEquality hiding ([_])
+
+
+open import LTL.Core
 open import LTL.Stateless
 open import LTL.CatHetSt
 open import LTL.PolConsts
-open import Agda.Primitive
 
 
 open import Data.Sum 

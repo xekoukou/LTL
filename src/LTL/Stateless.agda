@@ -1,7 +1,12 @@
 module LTL.Stateless where
 
-open import LTL.Core public
 open import Agda.Primitive
+open import Data.Nat hiding (_⊔_)
+open import Relation.Binary.PropositionalEquality hiding ([_])
+
+
+open import LTL.Core
+
 
 infixr 20 _⇒_
 

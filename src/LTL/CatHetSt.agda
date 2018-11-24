@@ -1,11 +1,11 @@
 module LTL.CatHetSt where
 
+open import Function using (_∘′_ ; id)
+open import Relation.Binary.PropositionalEquality hiding ([_])
 
 open import LTL.PolConsts
-open import LTL.Core public
+open import LTL.Core
 open import LTL.Stateless
-open import Function using (_∘′_ ; id)
-
 
 
 

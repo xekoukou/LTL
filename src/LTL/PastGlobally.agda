@@ -1,9 +1,14 @@
 module LTL.PastGlobally where
 
-open import LTL.Core public
+
+open import Data.Nat 
+open import Data.Product
+open import Data.Nat.Properties
+open import Relation.Binary.PropositionalEquality hiding ([_])
+
+open import LTL.Core
 open import LTL.Stateless
 open import LTL.CatHetSt
-open import Data.Product
 
 □ₚ : ∀ {α} → (Set α) ʷ → (Set α) ʷ
 (□ₚ As)(n) = (∀ m → (m ≤ n) → As(m))

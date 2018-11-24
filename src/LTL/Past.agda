@@ -1,7 +1,10 @@
 module LTL.Past where
 
-open import LTL.Core public
 open import Data.Product
+open import Data.Nat 
+open import Data.Nat.Properties
+
+open import LTL.Core
 open import LTL.Stateless
 
 ◇ₚ : ∀ {α} → (Set α)ʷ → (Set α)ʷ

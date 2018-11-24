@@ -1,8 +1,10 @@
 module LTL.Product where
 
-open import LTL.Core public
 open import Agda.Primitive
 open import Data.Product renaming (proj₁ to fst ; proj₂ to snd)
+open import Relation.Binary.PropositionalEquality hiding ([_])
+
+open import LTL.Core
 open import LTL.Stateless
 open import LTL.Causal
 open import LTL.Decoupled

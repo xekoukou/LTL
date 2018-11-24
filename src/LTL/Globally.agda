@@ -1,6 +1,11 @@
 module LTL.Globally where
 
-open import LTL.Core public
+
+
+open import Data.Nat 
+open import Data.Nat.Properties
+
+open import LTL.Core
 open import LTL.Stateless
 
 

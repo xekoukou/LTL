@@ -1,7 +1,11 @@
 module LTL.Causal where
 
 open import Agda.Primitive
-open import LTL.Core public
+open import Data.Nat hiding (_⊔_)
+open import Data.Nat.Properties
+
+
+open import LTL.Core
 open import LTL.Stateless
 open import LTL.Globally
 open import LTL.CatHetSt

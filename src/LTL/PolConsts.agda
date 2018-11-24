@@ -1,7 +1,7 @@
 module LTL.PolConsts where
 
 open import LTL.Stateless
-open import LTL.Core public
+open import LTL.Core
 
 -- Polymorphic Constants
 
