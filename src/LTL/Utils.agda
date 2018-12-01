@@ -1,4 +1,4 @@
-module LTL.Theorems where
+module LTL.Utils where
 
 open import LTL.Core
 open import LTL.Stateless
@@ -43,19 +43,19 @@ private
 
 
 {-# TERMINATING #-}
-firstChangeFromBelow′ : ∀{α k m w} → {A : Set α} → ∀{a b} → (dec : (a b : A) → Dec (a ≡ b)) → (beh : A ʷ)
+[a→b]⇒[a→a]′ : ∀{α k m w} → {A : Set α} → ∀{a b} → (dec : (a b : A) → Dec (a ≡ b)) → (beh : A ʷ)
        → k < m → ¬ (a ≡ b) → beh k ≡ a → beh m ≡ b
        → m ∸ k ≡ w → ∃ λ h → (k ≤ h) × (h < m) × ( ⟨ a ≡_ ⟩ $ beh) [ k ,, h ] × ¬ (beh (suc h) ≡ a)
-firstChangeFromBelow′ {w = zero} dec beh klm ¬eq lbnd rbnd negeq = ⊥-elim ((<⇒≱ klm) (m∸n≡0⇒m≤n negeq)) 
-firstChangeFromBelow′ {k = k} {m} {suc zero} dec beh klm ¬eq lbnd rbnd negeq
+[a→b]⇒[a→a]′ {w = zero} dec beh klm ¬eq lbnd rbnd negeq = ⊥-elim ((<⇒≱ klm) (m∸n≡0⇒m≤n negeq)) 
+[a→b]⇒[a→a]′ {k = k} {m} {suc zero} dec beh klm ¬eq lbnd rbnd negeq
   = k , (≤-refl , (klm , (λ m x y → subst (λ z → _ ≡ beh z) (≤-antisym x y) (sym lbnd)) , λ x → ¬eq (trans (sym x) q))) where
     q = subst (λ z → beh z ≡ _) (trans (sym (m∸n+n≡m (<⇒≤ klm))) (cong (_+ k) negeq)) rbnd
-firstChangeFromBelow′ {k = k} {w = suc (suc w)} {a = a} dec beh klm ¬eq lbnd rbnd negeq with dec (beh (suc k)) a
-firstChangeFromBelow′ {k = k} {m} {suc (suc w)} {a = a} dec beh klm ¬eq lbnd rbnd negeq | yes p
+[a→b]⇒[a→a]′ {k = k} {w = suc (suc w)} {a = a} dec beh klm ¬eq lbnd rbnd negeq with dec (beh (suc k)) a
+[a→b]⇒[a→a]′ {k = k} {m} {suc (suc w)} {a = a} dec beh klm ¬eq lbnd rbnd negeq | yes p
   = h , ((≤⇒pred≤ sk≤h) , (h<m , (λ g → d g refl) , noteq)) where
       e = (bb k negeq)
       f : ∃ λ h → ((suc k) ≤ h) × (h < m) × ( ⟨ a ≡_ ⟩ $ beh) [ (suc k) ,, h ] × ¬ (beh (suc h) ≡ a)
-      f = firstChangeFromBelow′ {w = suc w} dec beh (jj klm e) ¬eq p rbnd e
+      f = [a→b]⇒[a→a]′ {w = suc w} dec beh (jj klm e) ¬eq p rbnd e
       h = proj₁ f
       sk≤h = proj₁ (proj₂ f)
       h<m = proj₁ (proj₂ (proj₂ f))
@@ -66,27 +66,29 @@ firstChangeFromBelow′ {k = k} {m} {suc (suc w)} {a = a} dec beh klm ¬eq lbnd 
       d {suc l} g eq kleg gleh = intv g (jj kleg eq) gleh
 
 
-firstChangeFromBelow′ {k = k} {_} {suc (suc w)} {a = a} dec beh klm ¬eq lbnd rbnd negeq | no ¬p
+[a→b]⇒[a→a]′ {k = k} {_} {suc (suc w)} {a = a} dec beh klm ¬eq lbnd rbnd negeq | no ¬p
   = k , (≤-refl , klm , ((λ m x y → subst (λ z → _ ≡ beh z) (≤-antisym x y) (sym lbnd)) , ¬p))
 
 
-firstChangeFromBelow : ∀{α k m} → {A : Set α} → ∀{a b} → (dec : (a b : A) → Dec (a ≡ b)) → (beh : A ʷ)
+[a→b]⇒[a→a] : ∀{α k m} → {A : Set α} → ∀{a b} → (dec : (a b : A) → Dec (a ≡ b)) → (beh : A ʷ)
        → k < m → ¬ (a ≡ b) → beh k ≡ a → beh m ≡ b
        → ∃ λ h → (k ≤ h) × (h < m) × ( ⟨ a ≡_ ⟩ $ beh) [ k ,, h ] × ¬ (beh (suc h) ≡ a)
-firstChangeFromBelow dec beh klm ¬eq lbnd rbnd = firstChangeFromBelow′ dec beh klm ¬eq lbnd rbnd refl
+[a→b]⇒[a→a] dec beh klm ¬eq lbnd rbnd = [a→b]⇒[a→a]′ dec beh klm ¬eq lbnd rbnd refl
+
+
 
 {-# TERMINATING #-}
-firstChangeFromAbove′ : ∀{α k m w} → {A : Set α} → ∀{a b} → (dec : (a b : A) → Dec (a ≡ b)) → (beh : A ʷ)
+[a→b]⇒[b←b]′ : ∀{α k m w} → {A : Set α} → ∀{a b} → (dec : (a b : A) → Dec (a ≡ b)) → (beh : A ʷ)
        → k < m → ¬ (a ≡ b) → beh k ≡ a → beh m ≡ b
        → m ∸ k ≡ w → ∃ λ h → (k < h) × (h ≤ m) × ( ⟨ b ≡_ ⟩ $ beh) [ h ,, m ] × ¬ (beh (pred h) ≡ b)
-firstChangeFromAbove′ {w = zero} dec beh klm ¬eq lbnd rbnd negeq = ⊥-elim ((<⇒≱ klm) (m∸n≡0⇒m≤n negeq))
-firstChangeFromAbove′ {k = k} {m} {suc zero} dec beh klm ¬eq lbnd rbnd negeq
+[a→b]⇒[b←b]′ {w = zero} dec beh klm ¬eq lbnd rbnd negeq = ⊥-elim ((<⇒≱ klm) (m∸n≡0⇒m≤n negeq))
+[a→b]⇒[b←b]′ {k = k} {m} {suc zero} dec beh klm ¬eq lbnd rbnd negeq
   = (m , klm , (≤-refl , ((λ z x y → subst (λ z → _ ≡ beh z) (≤-antisym x y) (sym rbnd)) ,  λ x → ¬eq (trans (sym q) x)))) where
     q = subst ((λ z → beh z ≡ _)) (sym (dd negeq)) lbnd
-firstChangeFromAbove′ {k = k} {m} {suc (suc w)} {b = b} dec beh klm ¬eq lbnd rbnd negeq with dec (beh (pred m)) b
-firstChangeFromAbove′ {k = k} {m} {suc (suc w)} {b = b} dec beh klm ¬eq lbnd rbnd negeq | yes p
+[a→b]⇒[b←b]′ {k = k} {m} {suc (suc w)} {b = b} dec beh klm ¬eq lbnd rbnd negeq with dec (beh (pred m)) b
+[a→b]⇒[b←b]′ {k = k} {m} {suc (suc w)} {b = b} dec beh klm ¬eq lbnd rbnd negeq | yes p
   = h , k<h , (≤pred⇒≤ h≤m , (λ z → d z refl) , noteq) where
-    f = firstChangeFromAbove′ {w = suc w} dec beh (<⇒≤pred (jj klm (bb k negeq))) ¬eq lbnd p (bb2 k negeq)
+    f = [a→b]⇒[b←b]′ {w = suc w} dec beh (<⇒≤pred (jj klm (bb k negeq))) ¬eq lbnd p (bb2 k negeq)
     h = proj₁ f
     k<h = proj₁ (proj₂ f)
     h≤m = proj₁ (proj₂ (proj₂ f))
@@ -95,20 +97,26 @@ firstChangeFromAbove′ {k = k} {m} {suc (suc w)} {b = b} dec beh klm ¬eq lbnd 
     d : ∀{l} → (z : ℕ) → m ∸ z ≡ l → h ≤ z → z ≤ m → b ≡ beh z
     d {zero} z eq x y =  subst (λ z → b ≡ beh z) (≤-antisym (m∸n≡0⇒m≤n eq) y) (sym rbnd)
     d {suc l} z eq x y = intv z x (<⇒≤pred (jj y eq))
-firstChangeFromAbove′ {k = k} {m} {suc (suc w)} {b = b} dec beh klm ¬eq lbnd rbnd negeq | no ¬p
+[a→b]⇒[b←b]′ {k = k} {m} {suc (suc w)} {b = b} dec beh klm ¬eq lbnd rbnd negeq | no ¬p
   = m , klm , (≤-refl , (λ z x y → subst (λ z → _ ≡ beh z) (≤-antisym x y) (sym rbnd)) , ¬p)
 
-firstChangeFromAbove : ∀{α k m} → {A : Set α} → ∀{a b} → (dec : (a b : A) → Dec (a ≡ b)) → (beh : A ʷ)
+[a→b]⇒[b←b] : ∀{α k m} → {A : Set α} → ∀{a b} → (dec : (a b : A) → Dec (a ≡ b)) → (beh : A ʷ)
        → k < m → ¬ (a ≡ b) → beh k ≡ a → beh m ≡ b
        → ∃ λ h → (k < h) × (h ≤ m) × ( ⟨ b ≡_ ⟩ $ beh) [ h ,, m ] × ¬ (beh (pred h) ≡ b)
-firstChangeFromAbove dec beh klm ¬eq lbnd rbnd = firstChangeFromAbove′ dec beh klm ¬eq lbnd rbnd refl
+[a→b]⇒[b←b] dec beh klm ¬eq lbnd rbnd = [a→b]⇒[b←b]′ dec beh klm ¬eq lbnd rbnd refl
 
 
-firstChange-x<y : ∀{α k m} → {A : Set α} → ∀{a b} → (dec : (a b : A) → Dec (a ≡ b)) → (beh : A ʷ)
+
+
+[a→b]⇒x<y : ∀{α k m} → {A : Set α} → ∀{a b} → (dec : (a b : A) → Dec (a ≡ b)) → (beh : A ʷ)
   → (klm : k < m) → (¬eq : ¬ (a ≡ b)) → (lbnd : beh k ≡ a) → (rbnd : beh m ≡ b)
-  → ¬ (proj₁ (firstChangeFromAbove dec beh klm ¬eq lbnd rbnd) ≤ proj₁ (firstChangeFromBelow dec beh klm ¬eq lbnd rbnd))
-firstChange-x<y dec beh klm ¬eq lbnd rbnd x with (firstChangeFromAbove dec beh klm ¬eq lbnd rbnd) | (firstChangeFromBelow dec beh klm ¬eq lbnd rbnd)
-firstChange-x<y dec beh klm ¬eq lbnd rbnd x | ha , _ , _ , ga , _ | hb , hblt2 , hblt , gb , _
+  → ¬ (proj₁ ([a→b]⇒[b←b] dec beh klm ¬eq lbnd rbnd) ≤ proj₁ ([a→b]⇒[a→a] dec beh klm ¬eq lbnd rbnd))
+[a→b]⇒x<y dec beh klm ¬eq lbnd rbnd x with ([a→b]⇒[b←b] dec beh klm ¬eq lbnd rbnd) | ([a→b]⇒[a→a] dec beh klm ¬eq lbnd rbnd)
+[a→b]⇒x<y dec beh klm ¬eq lbnd rbnd x | ha , _ , _ , ga , _ | hb , hblt2 , hblt , gb , _
   = ¬eq (trans gbr (sym gar)) where
     gar = ga hb x (≤⇒pred≤ hblt)
     gbr = gb hb hblt2 ≤-refl
+
+
+
+
