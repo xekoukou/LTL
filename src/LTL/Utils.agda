@@ -120,3 +120,63 @@ private
 
 
 
+{-# TERMINATING #-}
+[a→b]⇒[Pa→Px]′ : ∀{α β k m w} → {A : Set α} → {P : A → Set β} → (dec : (x : A) → Dec (P x)) → (beh : A ʷ)
+       → k < m → P (beh k) → ¬ P (beh m) → m ∸ k ≡ w
+       → ∃ λ h → (k ≤ h) × (h < m) × ( ⟨ P ⟩ $ beh) [ k ,, h ] × ¬ (P (beh (suc h)))
+[a→b]⇒[Pa→Px]′ {w = zero} dec beh klm lbnd rbnd negeq =  ⊥-elim ((<⇒≱ klm) (m∸n≡0⇒m≤n negeq))
+[a→b]⇒[Pa→Px]′ {k = k} {m} {w = suc zero} {P = P} dec beh klm lbnd rbnd negeq
+  = k , (≤-refl , (klm , (λ m x y → subst (λ z → P (beh z)) (≤-antisym x y) lbnd) , q)) where
+    q = subst (λ z → ¬ P (beh z)) (trans (sym (m∸n+n≡m (<⇒≤ klm))) (cong (_+ k) negeq)) rbnd
+[a→b]⇒[Pa→Px]′ {k = k} {m} {w = suc (suc w)} {P = P} dec beh klm lbnd rbnd negeq with dec (beh (suc k))
+[a→b]⇒[Pa→Px]′ {k = k} {m} {suc (suc w)} {P = P} dec beh klm lbnd rbnd negeq | yes p
+  =  h , ((≤⇒pred≤ sk≤h) , (h<m , (λ g → d g refl) , noteq)) where
+      e = (bb k negeq)
+      f : ∃ λ h → ((suc k) ≤ h) × (h < m) × ( ⟨ P ⟩ $ beh) [ (suc k) ,, h ] × ¬ P (beh (suc h))
+      f = [a→b]⇒[Pa→Px]′ {w = suc w} dec beh (jj klm e) p rbnd e
+      h = proj₁ f
+      sk≤h = proj₁ (proj₂ f)
+      h<m = proj₁ (proj₂ (proj₂ f))
+      intv = proj₁ (proj₂ (proj₂ (proj₂ f)))
+      noteq = proj₂ (proj₂ (proj₂ (proj₂ f)))
+      d : ∀{l} → (g : ℕ) → g ∸ k ≡ l → k ≤ g → g ≤ h → P (beh g)
+      d {zero} g eq kleg gleh = subst (λ z → P (beh z)) (≤-antisym kleg (m∸n≡0⇒m≤n eq)) lbnd
+      d {suc l} g eq kleg gleh = intv g (jj kleg eq) gleh
+[a→b]⇒[Pa→Px]′ {k = k} {m} {suc (suc w)} {P = P} dec beh klm lbnd rbnd negeq | no ¬p
+  = k , (≤-refl , klm , ((λ m x y → subst (λ z → P (beh z)) (≤-antisym x y) lbnd) , ¬p))
+
+
+[a→b]⇒[Pa→Px] : ∀{α β k m} → {A : Set α} → {P : A → Set β} → (dec : (x : A) → Dec (P x)) → (beh : A ʷ)
+       → k < m → P (beh k) → ¬ P (beh m)
+       → ∃ λ h → (k ≤ h) × (h < m) × ( ⟨ P ⟩ $ beh) [ k ,, h ] × ¬ (P (beh (suc h)))
+[a→b]⇒[Pa→Px] dec beh klm lbnd rbnd = [a→b]⇒[Pa→Px]′ dec beh klm lbnd rbnd refl
+
+
+
+{-# TERMINATING #-}
+[a→b]⇒[¬Px←¬Pb]′ : ∀{α β k m w} → {A : Set α} → {P : A → Set β} → (dec : (x : A) → Dec (P x)) → (beh : A ʷ)
+       → k < m → P (beh k) → ¬ P (beh m) → m ∸ k ≡ w
+       → ∃ λ h → (k < h) × (h ≤ m) × ( ⟨ (λ z → ¬ P z) ⟩ $ beh) [ h ,, m ] × P (beh (pred h))
+[a→b]⇒[¬Px←¬Pb]′ {w = zero} dec beh klm lbnd rbnd negeq =  ⊥-elim ((<⇒≱ klm) (m∸n≡0⇒m≤n negeq))
+[a→b]⇒[¬Px←¬Pb]′ {k = k} {m} {suc zero} {P = P} dec beh klm lbnd rbnd negeq
+  = (m , klm , (≤-refl , ((λ z x y → subst (λ z → ¬ P (beh z)) (≤-antisym x y) rbnd ) ,  q))) where 
+    q = subst ((λ z → P (beh z))) (sym (dd negeq)) lbnd
+[a→b]⇒[¬Px←¬Pb]′ {k = k} {m} {suc (suc w)} dec beh klm lbnd rbnd negeq with dec (beh (pred m))
+[a→b]⇒[¬Px←¬Pb]′ {k = k} {m} {suc (suc w)} {P = P} dec beh klm lbnd rbnd negeq | no ¬p
+  =  h , k<h , (≤pred⇒≤ h≤m , (λ z → d z refl) , noteq) where
+     f = [a→b]⇒[¬Px←¬Pb]′ {w = suc w} dec beh (<⇒≤pred (jj klm (bb k negeq))) lbnd ¬p (bb2 k negeq)
+     h = proj₁ f
+     k<h = proj₁ (proj₂ f)
+     h≤m = proj₁ (proj₂ (proj₂ f))
+     intv = proj₁ (proj₂ (proj₂ (proj₂ f)))
+     noteq = proj₂ (proj₂ (proj₂ (proj₂ f)))
+     d : ∀{l} → (z : ℕ) → m ∸ z ≡ l → h ≤ z → z ≤ m → ¬ P (beh z)
+     d {zero} z eq x y =  subst (λ z → ¬ P (beh z)) (≤-antisym (m∸n≡0⇒m≤n eq) y) rbnd
+     d {suc l} z eq x y = intv z x (<⇒≤pred (jj y eq))
+[a→b]⇒[¬Px←¬Pb]′ {k = k} {m} {suc (suc w)} {P = P} dec beh klm lbnd rbnd negeq | yes p
+  = m , klm , (≤-refl , (λ z x y → subst (λ z → ¬ P (beh z)) (≤-antisym x y) rbnd) , p)
+
+[a→b]⇒[¬Px←¬Pb] : ∀{α β k m} → {A : Set α} → {P : A → Set β} → (dec : (x : A) → Dec (P x)) → (beh : A ʷ)
+       → k < m → P (beh k) → ¬ P (beh m)
+       → ∃ λ h → (k < h) × (h ≤ m) × ( ⟨ (λ z → ¬ P z) ⟩ $ beh) [ h ,, m ] × P (beh (pred h))
+[a→b]⇒[¬Px←¬Pb] dec beh klm lbnd rbnd = [a→b]⇒[¬Px←¬Pb]′ dec beh klm lbnd rbnd refl
