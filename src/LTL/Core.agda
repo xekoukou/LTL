@@ -5,6 +5,8 @@ open import Data.Nat
 open import Data.Empty
 open import Data.Nat.Properties
 open import Data.Product
+open import Relation.Nullary
+open import Function
 open import Relation.Binary.PropositionalEquality hiding ([_])
 
 -- Homogeneous FRP
@@ -68,6 +70,26 @@ _beforeˡ_ : ∀{ℓ} {A : (Set ℓ) ʷ} → ∀{s u v} → (A [ s ,, v ⟩) →
 _beforeʳ_ : ∀{ℓ} {A : (Set ℓ) ʷ} → ∀{s u v} → A [ s ,, v ⟩ → (u < v) → A [ s ,, u ]
 (σ beforeʳ u<v) t s≤t t≤u = σ t s≤t w where
   w = ≤-trans (s≤s t≤u) u<v
+
+
+[]-extₛ : ∀ {α l} → {A : Set α} → ⟨ A ⟩ [ 0 ,, l ] → A ʷ → A ʷ
+[]-extₛ {l = l} ln as n
+  = case (n ≤? l) of
+     λ { (yes p) → ln n z≤n p
+       ; (no ¬p) → as (n ∸ l)}
+
+
+[]-ext : ∀ {α l} → {A : (Set α) ʷ} → {B : (Set α) ʷ} → A [ 0 ,, l ] → [ B ] → [ []-extₛ {l = l} (λ m _ _ → A m) B ]
+[]-ext {l = l} ln as n with (n ≤? l)
+[]-ext {l = l} ln as n | yes p = ln n z≤n p
+[]-ext {l = l} ln as n | no ¬p = as (n ∸ l)
+
+[⟩-extₛ : ∀ {α l} → {A : Set α} → ⟨ A ⟩ [ 0 ,, l ⟩ → A ʷ → A ʷ
+[⟩-extₛ {l = l} ln as n
+  = case (n <? l) of
+     λ { (yes p) → ln n z≤n p
+       ; (no ¬p) → as (n ∸ l)}
+
 
 
 -- _∈_ : ∀ {α β} {A : Set α} → A → (A → Set β) → Set β
