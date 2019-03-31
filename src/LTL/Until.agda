@@ -12,3 +12,7 @@ infixr 2 _U_
 
 _U_ : ∀{ℓ m} → (Set ℓ) ʷ → (Set m) ʷ → (Set (ℓ ⊔ m)) ʷ
 (A U B) t = ∃ λ u → (t ≤ u) × (A [ t ,, u ⟩) × B u
+
+
+_Uₛ_ : ∀{ℓ m} → (Set ℓ) ʷ → (Set m) ʷ → (Set (ℓ ⊔ m)) ʷ
+(A Uₛ B) t = ∃ λ u → (t ≤ u) × (A [ t ,, u ]) × B u

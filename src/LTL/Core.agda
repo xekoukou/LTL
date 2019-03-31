@@ -2,6 +2,7 @@ module LTL.Core where
 
 open import Agda.Primitive
 open import Data.Nat 
+open import Data.Fin as F using (Fin)
 open import Data.Empty
 open import Data.Nat.Properties
 open import Data.Product
@@ -14,6 +15,9 @@ open import Relation.Binary.PropositionalEquality hiding ([_])
 _ʷ : ∀ {α} → Set α → Set α
 A ʷ =  ℕ → A
 
+_ʷ∥_ : ∀{ℓ} → Set ℓ → ℕ → Set ℓ
+A ʷ∥ m = Fin m → A
+
 ⟨_⟩ : ∀ {α} {A : Set α} → A → (A ʷ)
 ⟨ x ⟩ n = x
 
@@ -23,28 +27,32 @@ A ʷ =  ℕ → A
 ○ₛ : ∀ {α} {A : Set α} → (Aₛ : A ʷ) → A ʷ
 ○ₛ xs n = xs (suc n)
 
+○ᶠₛ : ∀ {α} {A : Set α} → ∀{m} → (Aₛ : A ʷ∥ (suc m)) → A ʷ∥ m
+○ᶠₛ xs n = xs (F.suc n)
+
+
+○ₙₛ : ∀ {α} {A : Set α} → (Aₛ : A ʷ) → ℕ → A ʷ
+○ₙₛ xs m n = xs (m + n)
+
 -- Heterogeneous FRP
 
 [_] : ∀ {α} → (Set α) ʷ → Set α
 [ Aₛ ] = ∀ n → Aₛ n
 
-
-lemma1 : ∀{a} {A : Set a} → A ʷ ≡ [ ⟨ A ⟩ ]
-lemma1 = refl
-
+[_]∥ : ∀{ℓ m} → (Set _) ʷ∥ m → Set ℓ
+[ Aₛ ]∥ = (fn : Fin _) → Aₛ fn
 
 ! : ∀ {α} {Aₛ : (Set α) ʷ} → [ Aₛ ] → !ₛ Aₛ
 ! xs = xs 0
 
-lemma2 : ∀ {α} → {Aₛ : (Set α) ʷ } → !ₛ Aₛ ≡ ! {Aₛ = ⟨ Set α ⟩ } Aₛ
-lemma2 = refl
-
-
 ○ : ∀ {α} {Aₛ : (Set α) ʷ} → [ Aₛ ] → [ ○ₛ Aₛ ]
 ○ xs n = xs (suc n)
 
-lemma3 : ∀ {α} {Aₛ : (Set α) ʷ} → ○ₛ Aₛ ≡ ○ Aₛ
-lemma3 = refl
+○ᶠ : ∀ {α m} {Aₛ : (Set α) ʷ∥ (suc m)} → [ Aₛ ]∥ → [ ○ᶠₛ Aₛ ]∥
+○ᶠ xs n = xs (F.suc n)
+
+○ₙ : ∀ {α} {Aₛ : (Set α) ʷ} → [ Aₛ ] → (m : ℕ) → [ ○ₙₛ Aₛ m ]
+○ₙ xs m n = xs (m + n)
 
 _∷ₛ_ : ∀ {α} {Aₛ : (Set α) ʷ} → ! Aₛ → [ ○ Aₛ ] → [ Aₛ ]
 (x ∷ₛ xs) 0 = x
